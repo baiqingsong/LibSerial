@@ -10,6 +10,7 @@
 * parity 校验位
 * serialType 串口类型
 * listener 回调
+
 发送信息
 * sendAsciiMsg 发送信息
 * sendHexMsg 发送16进制信息
