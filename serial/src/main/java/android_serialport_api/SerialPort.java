@@ -27,23 +27,23 @@ public class SerialPort {
             throws SecurityException, IOException {
 
         /* Check access permission */
-        if (!device.canRead() || !device.canWrite()) {
-            try {
-                /* Missing read/write permission, trying to chmod the file */
-                Process su;
-                su = Runtime.getRuntime().exec("/system/bin/su");
-                String cmd = "chmod 777 " + device.getAbsolutePath() + "\n"
-                        + "exit\n";
-                su.getOutputStream().write(cmd.getBytes());
-                if ((su.waitFor() != 0) || !device.canRead()
-                        || !device.canWrite()) {
-                    throw new SecurityException();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new SecurityException();
-            }
-        }
+//        if (!device.canRead() || !device.canWrite()) {
+//            try {
+//                /* Missing read/write permission, trying to chmod the file */
+//                Process su;
+//                su = Runtime.getRuntime().exec("/system/bin/su");
+//                String cmd = "chmod 777 " + device.getAbsolutePath() + "\n"
+//                        + "exit\n";
+//                su.getOutputStream().write(cmd.getBytes());
+//                if ((su.waitFor() != 0) || !device.canRead()
+//                        || !device.canWrite()) {
+//                    throw new SecurityException();
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                throw new SecurityException();
+//            }
+//        }
 
         FileDescriptor mFd = open(device.getAbsolutePath(), baudrate, dataBits,stopBits,parity);
         if (mFd == null) {

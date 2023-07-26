@@ -1,5 +1,6 @@
 package com.dawn.serial;
 
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import androidx.annotation.NonNull;
@@ -35,6 +36,10 @@ public class LSerialUtil {
     private final static String PATH_NAME_4 = "/dev/ttyS4";
     private final static String PATH_NAME_5 = "/dev/ttyS5";
     private final static String PATH_NAME_6 = "/dev/ttyS6";
+    private final static String PATH_NAME_1_3399 = "/dev/ttysWK0";
+    private final static String PATH_NAME_2_3399 = "/dev/ttysWK1";
+    private final static String PATH_NAME_3_3399 = "/dev/ttysWK2";
+    private final static String PATH_NAME_4_3399 = "/dev/ttysWK3";
     private final static int baudRateDefault = 115200;
     private final static int dataBitsDefault = 8;
     private final static int stopBitsDefault = 1;
@@ -81,16 +86,28 @@ public class LSerialUtil {
                 this.mPathName = PATH_NAME_0;
                 break;
             case 1:
-                this.mPathName = PATH_NAME_1;
+                if("rk3399".equals(Build.DEVICE))
+                    this.mPathName = PATH_NAME_1_3399;
+                else
+                    this.mPathName = PATH_NAME_1;
                 break;
             case 2:
-                this.mPathName = PATH_NAME_2;
+                if("rk3399".equals(Build.DEVICE))
+                    this.mPathName = PATH_NAME_2_3399;
+                else
+                    this.mPathName = PATH_NAME_2;
                 break;
             case 3:
-                this.mPathName = PATH_NAME_3;
+                if("rk3399".equals(Build.DEVICE))
+                    this.mPathName = PATH_NAME_3_3399;
+                else
+                    this.mPathName = PATH_NAME_3;
                 break;
             case 4:
-                this.mPathName = PATH_NAME_4;
+                if("rk3399".equals(Build.DEVICE))
+                    this.mPathName = PATH_NAME_4_3399;
+                else
+                    this.mPathName = PATH_NAME_4;
                 break;
             case 5:
                 this.mPathName = PATH_NAME_5;
