@@ -2,6 +2,7 @@ package com.dawn.libserial;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -21,13 +22,20 @@ public class SerialService extends Service {
     public void onCreate() {
         super.onCreate();
         startPort();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.i("dawn", "send msg");
+                sendMsg("{\"cmd\":\"press\"}");
+            }
+        }, 3000);
     }
 
     /**
      * 启动串口
      */
     private void startPort(){
-        serialUtil = new LSerialUtil(1, 9600, 8, 2, 'N', LSerialUtil.SerialType.TYPE_HEX, new LSerialUtil.OnSerialListener() {
+        serialUtil = new LSerialUtil(1, 115200, 8, 1, 'N', LSerialUtil.SerialType.TYPE_HEX, new LSerialUtil.OnSerialListener() {
             @Override
             public void startError() {
                 Log.i("dawn", "串口启动异常");
@@ -48,6 +56,7 @@ public class SerialService extends Service {
                 Log.i("dawn", "串口接收到的数据：" + str);
             }
         });
+        Log.i("dawn", "开启串口");
     }
 
     /**
