@@ -26,7 +26,7 @@ public class SerialService extends Service {
             @Override
             public void run() {
                 Log.i("dawn", "send msg");
-                sendMsg("{\"cmd\":\"press\"}");
+                sendAsciiMsg("{\"cmd\":\"press\"}");
             }
         }, 3000);
     }
@@ -35,7 +35,7 @@ public class SerialService extends Service {
      * 启动串口
      */
     private void startPort(){
-        serialUtil = new LSerialUtil(1, 115200, 8, 1, 'N', LSerialUtil.SerialType.TYPE_HEX, new LSerialUtil.OnSerialListener() {
+        serialUtil = new LSerialUtil(1, 115200, LSerialUtil.SerialType.TYPE_ASCII, new LSerialUtil.OnSerialListener() {
             @Override
             public void startError() {
                 Log.i("dawn", "串口启动异常");
@@ -66,4 +66,7 @@ public class SerialService extends Service {
     private void sendMsg(String hexStr){
         serialUtil.sendHexMsg(hexStr);
     }
+
+    private void sendAsciiMsg(String asciiStr){ serialUtil.sendAsciiMsg(asciiStr);}
+
 }
