@@ -26,6 +26,9 @@ public class LSerialUtil {
     public enum SerialType{
         TYPE_HEX, TYPE_ASCII
     }
+    public enum SerialNameType{
+        TYPE_TTYS, TYPE_TTYS_WK
+    }
     /**
      * 串口名称
      */
@@ -36,10 +39,13 @@ public class LSerialUtil {
     private final static String PATH_NAME_4 = "/dev/ttyS4";
     private final static String PATH_NAME_5 = "/dev/ttyS5";
     private final static String PATH_NAME_6 = "/dev/ttyS6";
-    private final static String PATH_NAME_1_3399 = "/dev/ttysWK0";
-    private final static String PATH_NAME_2_3399 = "/dev/ttysWK1";
-    private final static String PATH_NAME_3_3399 = "/dev/ttysWK2";
-    private final static String PATH_NAME_4_3399 = "/dev/ttysWK3";
+    private final static String PATH_NAME_0_WK = "/dev/ttysWK0";
+    private final static String PATH_NAME_1_WK = "/dev/ttysWK1";
+    private final static String PATH_NAME_2_WK = "/dev/ttysWK2";
+    private final static String PATH_NAME_3_WK = "/dev/ttysWK3";
+    private final static String PATH_NAME_4_WK = "/dev/ttysWK4";
+    private final static String PATH_NAME_5_WK = "/dev/ttysWK5";
+    private final static String PATH_NAME_6_WK = "/dev/ttysWK6";
     private final static int baudRateDefault = 115200;
     private final static int dataBitsDefault = 8;
     private final static int stopBitsDefault = 1;
@@ -69,8 +75,12 @@ public class LSerialUtil {
         this(port, baudRate, dataBitsDefault, stopBitsDefault, parityDefault, serialType, listener);
     }
 
+    public LSerialUtil(int port, int baudRate, int dataBits, int stopBits, char parity, SerialType serialType, OnSerialListener listener){
+        this(SerialNameType.TYPE_TTYS, port, baudRate, dataBits, stopBits, parity, serialType, listener);
+    }
     /**
      * 初始化
+     * @param serialNameType 串口类型 0: ttys, 1: ttysWK
      * @param port 串口
      * @param baudRate 波特率
      * @param dataBits 数据位
@@ -80,40 +90,49 @@ public class LSerialUtil {
      * @param listener 回调
      */
     @SuppressWarnings("WeakerAccess")
-    public LSerialUtil(int port, int baudRate, int dataBits, int stopBits, char parity, SerialType serialType, OnSerialListener listener){
+    public LSerialUtil(SerialNameType serialNameType, int port, int baudRate, int dataBits, int stopBits, char parity, SerialType serialType, OnSerialListener listener){
         switch (port){
             case 0:
-                this.mPathName = PATH_NAME_0;
+                if(serialNameType == SerialNameType.TYPE_TTYS_WK)
+                    this.mPathName = PATH_NAME_0_WK;
+                else
+                    this.mPathName = PATH_NAME_0;
                 break;
             case 1:
-                if("rk3399".equals(Build.DEVICE))
-                    this.mPathName = PATH_NAME_1_3399;
+                if(serialNameType == SerialNameType.TYPE_TTYS_WK)
+                    this.mPathName = PATH_NAME_1_WK;
                 else
                     this.mPathName = PATH_NAME_1;
                 break;
             case 2:
-                if("rk3399".equals(Build.DEVICE))
-                    this.mPathName = PATH_NAME_2_3399;
+                if(serialNameType == SerialNameType.TYPE_TTYS_WK)
+                    this.mPathName = PATH_NAME_2_WK;
                 else
                     this.mPathName = PATH_NAME_2;
                 break;
             case 3:
-                if("rk3399".equals(Build.DEVICE))
-                    this.mPathName = PATH_NAME_3_3399;
+                if(serialNameType == SerialNameType.TYPE_TTYS_WK)
+                    this.mPathName = PATH_NAME_3_WK;
                 else
                     this.mPathName = PATH_NAME_3;
                 break;
             case 4:
-                if("rk3399".equals(Build.DEVICE))
-                    this.mPathName = PATH_NAME_4_3399;
+                if(serialNameType == SerialNameType.TYPE_TTYS_WK)
+                    this.mPathName = PATH_NAME_4_WK;
                 else
                     this.mPathName = PATH_NAME_4;
                 break;
             case 5:
-                this.mPathName = PATH_NAME_5;
+                if(serialNameType == SerialNameType.TYPE_TTYS_WK)
+                    this.mPathName = PATH_NAME_5_WK;
+                else
+                    this.mPathName = PATH_NAME_5;
                 break;
             case 6:
-                this.mPathName = PATH_NAME_6;
+                if(serialNameType == SerialNameType.TYPE_TTYS_WK)
+                    this.mPathName = PATH_NAME_6_WK;
+                else
+                    this.mPathName = PATH_NAME_6;
                 break;
         }
         this.mBaudRate = baudRate;
