@@ -35,7 +35,7 @@ public class SerialService extends Service {
      * 启动串口
      */
     private void startPort(){
-        serialUtil = new LSerialUtil(1, 115200, LSerialUtil.SerialType.TYPE_ASCII, new LSerialUtil.OnSerialListener() {
+        serialUtil = new LSerialUtil(LSerialUtil.SerialNameType.TYPE_TTYS_WK, 0, 9600, 8, 2, 'N', LSerialUtil.SerialType.TYPE_HEX, new LSerialUtil.OnSerialListener() {
             @Override
             public void startError() {
                 Log.i("dawn", "串口启动异常");
