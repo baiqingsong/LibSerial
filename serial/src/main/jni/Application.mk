@@ -1,2 +1,2 @@
-APP_ABI := armeabi armeabi-v7a x86 x86_64
+APP_ABI := arm64-v8a armeabi-v7a
 APP_BUILD_SCRIPT := Android.mk

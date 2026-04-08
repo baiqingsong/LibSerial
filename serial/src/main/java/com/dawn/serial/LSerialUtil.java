@@ -3,11 +3,10 @@ package com.dawn.serial;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.dawn.util_fun.LLog;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -177,7 +176,7 @@ public class LSerialUtil {
         this.mParity = parity;
         this.mSerialType = serialType;
         this.mListener = listener;
-        LLog.d(TAG, "init portPath=" + portPath + ", baudRate=" + baudRate
+        Log.d(TAG, "init portPath=" + portPath + ", baudRate=" + baudRate
                 + ", dataBits=" + dataBits + ", stopBits=" + stopBits + ", parity=" + parity);
         open();
     }
@@ -203,7 +202,7 @@ public class LSerialUtil {
         this.mParity = parity;
         this.mSerialType = serialType;
         this.mListener = listener;
-        LLog.d(TAG, "init portPath=" + mPortPath + ", baudRate=" + baudRate
+        Log.d(TAG, "init portPath=" + mPortPath + ", baudRate=" + baudRate
                 + ", dataBits=" + dataBits + ", stopBits=" + stopBits + ", parity=" + parity);
         open();
     }
@@ -234,7 +233,7 @@ public class LSerialUtil {
      */
     public boolean open() {
         if (mIsConnected) {
-            LLog.w(TAG, "串口已处于打开状态: " + mPortPath);
+            Log.w(TAG, "串口已处于打开状态: " + mPortPath);
             return true;
         }
         try {
@@ -263,10 +262,10 @@ public class LSerialUtil {
                     startAsciiReceiver();
                     break;
             }
-            LLog.i(TAG, "串口打开成功: " + mPortPath + ", 波特率: " + mBaudRate);
+            Log.i(TAG, "串口打开成功: " + mPortPath + ", 波特率: " + mBaudRate);
             return true;
         } catch (Exception e) {
-            LLog.e(TAG, "串口打开失败: " + mPortPath + ", " + e.getMessage());
+            Log.e(TAG, "串口打开失败: " + mPortPath + ", " + e.getMessage());
             mIsConnected = false;
             // 清理已创建但未完全初始化的资源
             closeStreams();
@@ -290,9 +289,9 @@ public class LSerialUtil {
             closeSerialPort();
             mHandler.removeCallbacksAndMessages(null);
             clearReceiveCache();
-            LLog.i(TAG, "串口断开成功: " + mPortPath);
+            Log.i(TAG, "串口断开成功: " + mPortPath);
         } catch (Exception e) {
-            LLog.e(TAG, "断开串口异常: " + e.getMessage());
+            Log.e(TAG, "断开串口异常: " + e.getMessage());
         }
     }
 
@@ -312,7 +311,7 @@ public class LSerialUtil {
      * @return true 重连成功，false 重连失败
      */
     public boolean reconnect() {
-        LLog.i(TAG, "串口重连: " + mPortPath);
+        Log.i(TAG, "串口重连: " + mPortPath);
         disconnect();
         return open();
     }
@@ -326,7 +325,7 @@ public class LSerialUtil {
      */
     public void sendHex(@NonNull byte[] bytes) {
         if (!mIsConnected) {
-            LLog.w(TAG, "串口未连接，无法发送");
+            Log.w(TAG, "串口未连接，无法发送");
             return;
         }
         synchronized (mSendLock) {
@@ -336,7 +335,7 @@ public class LSerialUtil {
                     mOutputStream.flush();
                 }
             } catch (Exception e) {
-                LLog.e(TAG, "发送HEX数据失败: " + e.getMessage());
+                Log.e(TAG, "发送HEX数据失败: " + e.getMessage());
                 if (mListener != null) {
                     mListener.onSendError(e);
                 }
@@ -353,7 +352,7 @@ public class LSerialUtil {
         try {
             sendHex(hexStringToBytes(hexStr));
         } catch (IllegalArgumentException e) {
-            LLog.e(TAG, "HEX字符串格式错误: " + e.getMessage());
+            Log.e(TAG, "HEX字符串格式错误: " + e.getMessage());
             if (mListener != null) {
                 mListener.onSendError(e);
             }
@@ -387,7 +386,7 @@ public class LSerialUtil {
      */
     public void sendAsciiLine(@NonNull String msg) {
         if (!mIsConnected) {
-            LLog.w(TAG, "串口未连接，无法发送");
+            Log.w(TAG, "串口未连接，无法发送");
             return;
         }
         synchronized (mSendLock) {
@@ -398,7 +397,7 @@ public class LSerialUtil {
                     mPrintWriter.flush();
                 }
             } catch (Exception e) {
-                LLog.e(TAG, "发送ASCII数据失败: " + e.getMessage());
+                Log.e(TAG, "发送ASCII数据失败: " + e.getMessage());
                 if (mListener != null) {
                     mListener.onSendError(e);
                 }
@@ -423,7 +422,7 @@ public class LSerialUtil {
      */
     public void sendAscii(@NonNull String msg) {
         if (!mIsConnected) {
-            LLog.w(TAG, "串口未连接，无法发送");
+            Log.w(TAG, "串口未连接，无法发送");
             return;
         }
         synchronized (mSendLock) {
@@ -433,7 +432,7 @@ public class LSerialUtil {
                     mPrintWriter.flush();
                 }
             } catch (Exception e) {
-                LLog.e(TAG, "发送ASCII数据失败: " + e.getMessage());
+                Log.e(TAG, "发送ASCII数据失败: " + e.getMessage());
                 if (mListener != null) {
                     mListener.onSendError(e);
                 }
@@ -506,7 +505,7 @@ public class LSerialUtil {
     public void sendHexChunked(@NonNull byte[] data, int chunkSize, int chunkDelayMs,
                                @Nullable OnSendProgressListener listener) {
         if (!mIsConnected) {
-            LLog.w(TAG, "串口未连接，无法发送");
+            Log.w(TAG, "串口未连接，无法发送");
             return;
         }
         if (data.length == 0) {
@@ -569,24 +568,24 @@ public class LSerialUtil {
                 }
 
                 if (mCancelChunkedSend) {
-                    LLog.i(TAG, "分包发送已取消, 已发送: " + offset + "/" + totalBytes);
+                    Log.i(TAG, "分包发送已取消, 已发送: " + offset + "/" + totalBytes);
                     if (listener != null) {
                         listener.onCancelled(offset);
                     }
                 } else {
-                    LLog.i(TAG, "分包发送完成: " + totalBytes + " 字节");
+                    Log.i(TAG, "分包发送完成: " + totalBytes + " 字节");
                     if (listener != null) {
                         listener.onComplete(totalBytes);
                     }
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                LLog.i(TAG, "分包发送线程被中断, 已发送: " + offset + "/" + totalBytes);
+                Log.i(TAG, "分包发送线程被中断, 已发送: " + offset + "/" + totalBytes);
                 if (listener != null) {
                     listener.onCancelled(offset);
                 }
             } catch (Exception e) {
-                LLog.e(TAG, "分包发送失败: " + e.getMessage() + ", 已发送: " + offset + "/" + totalBytes);
+                Log.e(TAG, "分包发送失败: " + e.getMessage() + ", 已发送: " + offset + "/" + totalBytes);
                 if (listener != null) {
                     listener.onError(offset, e);
                 }
@@ -634,7 +633,7 @@ public class LSerialUtil {
                     int size = mInputStream.read(buffer);
                     if (size == -1) {
                         // 流已结束
-                        LLog.w(TAG, "HEX输入流已结束: " + mPortPath);
+                        Log.w(TAG, "HEX输入流已结束: " + mPortPath);
                         break;
                     }
                     if (size > 0) {
@@ -642,7 +641,7 @@ public class LSerialUtil {
                     }
                 } catch (IOException e) {
                     if (!Thread.currentThread().isInterrupted() && mIsConnected) {
-                        LLog.e(TAG, "HEX接收错误: " + e.getMessage());
+                        Log.e(TAG, "HEX接收错误: " + e.getMessage());
                         if (mListener != null) {
                             mListener.onReceiveError(e);
                         }
@@ -670,7 +669,7 @@ public class LSerialUtil {
                     }
                 } catch (IOException e) {
                     if (!Thread.currentThread().isInterrupted() && mIsConnected) {
-                        LLog.e(TAG, "ASCII接收错误: " + e.getMessage());
+                        Log.e(TAG, "ASCII接收错误: " + e.getMessage());
                         if (mListener != null) {
                             mListener.onReceiveError(e);
                         }
@@ -956,7 +955,7 @@ public class LSerialUtil {
                 mPrintWriter = null;
             }
         } catch (Exception e) {
-            LLog.e(TAG, "关闭PrintWriter失败: " + e.getMessage());
+            Log.e(TAG, "关闭PrintWriter失败: " + e.getMessage());
         }
 
         try {
@@ -965,7 +964,7 @@ public class LSerialUtil {
                 mBufferedReader = null;
             }
         } catch (Exception e) {
-            LLog.e(TAG, "关闭BufferedReader失败: " + e.getMessage());
+            Log.e(TAG, "关闭BufferedReader失败: " + e.getMessage());
         }
 
         mOutputStream = null;
