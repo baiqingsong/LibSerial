@@ -13,6 +13,7 @@ import java.io.OutputStream;
 public class SerialPort {
     private static final String TAG = "SerialPort";
 
+    private FileDescriptor mFd;
     private FileInputStream mFileInputStream;
     private FileOutputStream mFileOutputStream;
     /***
@@ -45,7 +46,7 @@ public class SerialPort {
 //            }
 //        }
 
-        FileDescriptor mFd = open(device.getAbsolutePath(), baudrate, dataBits,stopBits,parity);
+        mFd = open(device.getAbsolutePath(), baudrate, dataBits,stopBits,parity);
         if (mFd == null) {
             Log.e(TAG, "native open returns null");
             throw new IOException();
